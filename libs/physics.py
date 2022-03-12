@@ -17,14 +17,6 @@ class Physics:
         self.y0 += self.vy0 * dt + self.ay0 * (dt ** 2) / 2
         self.vy0 += self.ay0 * dt
 
-    def gravity_predict(self, dt):
-        return Physics(
-            (self.x0 + self.vx0 * dt + self.ax0 * dt ** 2 / 2, self.y0 + self.vy0 * dt + self.ay0 * dt ** 2 / 2),
-            (self.vx0 + self.ax0 * dt, self.vy0 + self.ay0 * dt),
-            (self.ax0, self.ay0),
-            (1-self.kx, 1-self.ky)
-        )
-
     def get_tuple(self):
         return (self.x0, self.y0), (self.vx0, self.vy0), (self.ax0, self.ay0)
 
