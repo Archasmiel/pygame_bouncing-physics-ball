@@ -41,6 +41,18 @@ class Ball:
     def check_bounds(coord, coord_check, bound):
         return coord_check - bound < coord < coord_check + bound
 
+    @staticmethod
+    def update_coordinates(coord, speed, mini, maxi, k):
+        if abs(speed) < 10 ** -8:
+            speed = 0
+        if coord < mini:
+            speed *= -k
+            coord = mini
+        elif coord > maxi:
+            speed *= -k
+            coord = maxi
+        return coord, speed
+
     def normalizing_balls(self, ball, v1, v2, dist):
         angle = atan(v2.y - v1.y / v2.x - v1.x)
         inequality = self.r + ball.r - dist
@@ -68,8 +80,6 @@ class Ball:
                 self.physics.vx, self.physics.vy = vaf[0], vaf[1]
                 ball.physics.vx, ball.physics.vy = vbf[0], vbf[1]
 
-
-
     def update_friction(self, screen):
         speed_mod = (self.physics.vx**2 + self.physics.vy**2) ** 0.5
         speed_rvect = self.physics.vx/speed_mod, self.physics.vy/speed_mod
@@ -85,24 +95,6 @@ class Ball:
         else:
             self.physics.afry = 0
 
-    def draw_ball(self, screen):
-        pygame.draw.circle(screen, self.color, (round(self.physics.x), round(self.physics.y)), self.r)
-        pygame.draw.circle(screen, (128, 12, 0), (round(self.physics.x), round(self.physics.y)), self.r, 2)
-        pygame.draw.line(screen, (225, 225, 225), (self.physics.x, self.physics.y),
-                         (self.physics.x + self.physics.vx / 10, self.physics.y + self.physics.vy / 10), 2)
-
-    @staticmethod
-    def update_coordinates(coord, speed, mini, maxi, k):
-        if abs(speed) < 10 ** -8:
-            speed = 0
-        if coord <= mini:
-            speed *= -k
-            coord = mini
-        elif coord >= maxi:
-            speed *= -k
-            coord = maxi
-        return coord, speed
-
     def update_ball(self, screen, dt):
 
         self.physics.gravity_update_x(dt)
@@ -112,3 +104,13 @@ class Ball:
         self.physics.gravity_update_y(dt)
         self.physics.y, self.physics.vy = self.update_coordinates(self.physics.y, self.physics.vy, self.r,
                                                                   screen.get_height() - self.r, self.physics.ky)
+
+    def draw_ball(self, screen):
+        pygame.draw.circle(screen, self.color, (round(self.physics.x), round(self.physics.y)), self.r)
+        pygame.draw.circle(screen, (128, 12, 0), (round(self.physics.x), round(self.physics.y)), self.r, 2)
+        pygame.draw.line(screen, (225, 225, 225), (self.physics.x, self.physics.y),
+                         (self.physics.x + self.physics.vx / 10, self.physics.y + self.physics.vy / 10), 2)
+
+
+
+
